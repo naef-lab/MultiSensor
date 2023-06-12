@@ -1,8 +1,8 @@
 # MSS - the Multi-Sensor Study
 
-This is the code to accompany our pre-print: 
+This is the code to accompany our paper: 
 
-Uncovering personalised glucose responses and circadian rhythms from multiple wearable biosensors with Bayesian dynamical modelling (2022) Phillips NE, Collet TH*, Naef F*. 
+Uncovering personalised glucose responses and circadian rhythms from multiple wearable biosensors with Bayesian dynamical modelling (2023) Phillips NE, Collet TH\*, Naef F\*. 
 
 The goal of this computational method is to learn interpretable, personal parameters from wearable time series data to reveal circadian rhythms and physiological responses to external stressors such as meals and physical activity. The package MSS uses [TensorFlow Probability](https://www.tensorflow.org/probability).
 
@@ -32,3 +32,7 @@ conda env create -f environment.yml
 conda activate MultiSensor
 pip install .
 ```
+
+## Citation
+
+Uncovering personalised glucose responses and circadian rhythms from multiple wearable biosensors with Bayesian dynamical modelling (2023) Phillips NE, Collet TH\*, Naef F\*. 
