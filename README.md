@@ -25,8 +25,8 @@ These three different models are implemented as part of the MSS package.
 There are three different tutorials to help use the package:
 
 - [tutorials/tutorial.ipynb](tutorials/tutorial.ipynb): please see the main tutorial Jupyter Notebook  to see how to perform inference using the three models.
-- [tutorials/detrending raw glucose example.ipynb](tutorials/detrending raw glucose example.ipynb): this describes how to pre-process glucose CGM data via detrending.
-- [tutorials/Why add a 24-h rhythmic baseline to glucose?.ipynb](tutorials/Why add a 24-h rhythmic baseline to glucose?.ipynb): this provides an example to illustrate the motivation behind the underlying 24-hour baseline glucose rhythm in Model 1.
+- [tutorials/detrending raw glucose example.ipynb](tutorials/detrending%20raw%20glucose%20example.ipynb): this describes how to pre-process glucose CGM data via detrending.
+- [tutorials/Why add a 24-h rhythmic baseline to glucose?.ipynb](tutorials/Why%20add%20a%2024-h%20rhythmic%20baseline%20to%20glucose%3F.ipynb): this provides an example to illustrate the motivation behind the underlying 24-hour baseline glucose rhythm in Model 1.
 
 ## Installation instructions
 
