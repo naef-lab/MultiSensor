@@ -55,7 +55,6 @@ class DatasetModel1ConcatenatedSensors:
         self._load_data()
             
     def _load_data(self):
-        
         """
         Loads in food and glucose data using provided file names
         """
@@ -63,8 +62,19 @@ class DatasetModel1ConcatenatedSensors:
         gluc_db1 = pd.read_csv(self.fname_gluc1,index_col=False)
         gluc_db2 = pd.read_csv(self.fname_gluc2,index_col=False)
         
-        food_db1 = pd.read_excel(self.fname_food1)
-        food_db2 = pd.read_excel(self.fname_food2)
+        if self.fname_food1.endswith('.xlsx'):
+            food_db1 = pd.read_excel(self.fname_food1)
+        elif self.fname_food1.endswith('.csv'):
+            food_db1 = pd.read_csv(self.fname_food1)
+        else:
+            raise DataInputError("Invalid file format. The file should be either .xlsx or .csv.")
+
+        if self.fname_food2.endswith('.xlsx'):
+            food_db2 = pd.read_excel(self.fname_food2)
+        elif self.fname_food2.endswith('.csv'):
+            food_db2 = pd.read_csv(self.fname_food2)
+        else:
+            raise DataInputError("Invalid file format. The file should be either .xlsx or .csv.")
         
         cond1 = (gluc_db1.shape[0] ==0)
         cond2 = (gluc_db2.shape[0] ==0)
@@ -274,13 +284,18 @@ class DatasetModel1SingleSensor:
         self._load_data()
             
     def _load_data(self):
-        
         """
         Loads in food and glucose data using provided file names
         """
               
         gluc_db1 = pd.read_csv(self.fname_gluc1,index_col=False)
-        food_db1 = pd.read_excel(self.fname_food1)
+        
+        if self.fname_food1.endswith('.xlsx'):
+            food_db1 = pd.read_excel(self.fname_food1)
+        elif self.fname_food1.endswith('.csv'):
+            food_db1 = pd.read_csv(self.fname_food1)
+        else:
+            raise DataInputError("Invalid file format. The file should be either .xlsx or .csv.")
 
         cond1 = (gluc_db1.shape[0] ==0)
         cond2 = (food_db1.shape[0] ==0)

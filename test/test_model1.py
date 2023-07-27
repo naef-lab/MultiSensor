@@ -22,6 +22,7 @@ from scipy.stats.stats import pearsonr
 from tensorflow_probability import distributions as tfd
 from MSS.abstractmodel import MSSModel
 from MSS.model1dataset import DatasetModel1SingleSensor, DatasetModel1ConcatenatedSensors
+from MSS.model1 import Model1Concatenated, Model1SingleSensor, Model1SingleSensor_nocirc
 from unittest import TestCase
 os.environ['TF_XLA_FLAGS'] = '--tf_xla_enable_xla_devices'
 
@@ -110,9 +111,9 @@ class TestModel1SingleSensor(unittest.TestCase):
         fname_food1 = f"{data_root_dir}{fname_food}{study_id}-1.xlsx"
 
         if is_concatenated == '1':
-            self.data = DatasetModel1ConcatenatedSensors(fname_gluc1,fname_food1,fname_gluc2,fname_food2,study_id,sensor)
+            data_gluc = DatasetModel1ConcatenatedSensors(fname_gluc1,fname_food1,fname_gluc2,fname_food2,study_id,sensor)
         elif is_concatenated == '0':
-            self.data = DatasetModel1SingleSensor(fname_gluc1,fname_food1,study_id,sensor)
+            data_gluc = DatasetModel1SingleSensor(fname_gluc1,fname_food1,study_id,sensor)
             
         if is_concatenated == '1':
             self.model1 = Model1Concatenated(data_gluc)  
@@ -132,7 +133,7 @@ class TestModel1SingleSensor(unittest.TestCase):
         
     def test_mean_func(self):
         sample_vector = self.model1.sample_prior()
-        f_meals_and_circadian, f_meals, f_circadian = self.model1.all_mean_funcs(sample_vector,self.model1.X1,self.model1.T_sub_timestamp1,self.model1.food_item_index1)
+        f_meals_and_circadian, f_meals, f_circadian = self.model1.all_mean_funcs(sample_vector,self.model1.X1,self.model1.T_sub_timestamp1,self.model1.food_item_index1,1)
         cond = []
         cond.append(f_meals_and_circadian.dtype == tf.float32)
         cond.append(tf.shape(f_meals_and_circadian).shape==1)

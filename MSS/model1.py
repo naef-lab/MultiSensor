@@ -536,8 +536,8 @@ class Model1Concatenated(MSSModel):
         circ_and_meals = tf.concat((circ_and_meals1,circ_and_meals2),0)
         meals = tf.concat((meals1,meals2),0)
 
-        rval_meals, pval = pearsonr(meals,Y)
-        rval_circ_and_meals, pval = pearsonr(circ_and_meals,Y)
+        rval_meals, pval = pearsonr(meals.numpy().reshape(-1),Y.numpy().reshape(-1))
+        rval_circ_and_meals, pval = pearsonr(circ_and_meals.numpy().reshape(-1),Y.numpy().reshape(-1))
         
         var_data = np.var(Y)
         
@@ -1018,8 +1018,8 @@ class Model1SingleSensor(MSSModel):
                                                              1)
         Y = self.Y1[:,0]
 
-        rval_meals, pval = pearsonr(meals,Y)
-        rval_circ_and_meals, pval = pearsonr(circ_and_meals,Y)
+        rval_meals, pval = pearsonr(meals.numpy().reshape(-1),Y.numpy().reshape(-1))
+        rval_circ_and_meals, pval = pearsonr(circ_and_meals.numpy().reshape(-1),Y.numpy().reshape(-1))
         
         var_data = np.var(Y)
         
@@ -1032,4 +1032,60 @@ class Model1SingleSensor(MSSModel):
         expl_var_circ_and_meals = 1-var_residual_circ_and_meals/var_data
             
         return rval_circ_and_meals, rval_meals, expl_var_circ_and_meals, expl_var_meals
-    
+   
+
+class Model1SingleSensor_nocirc(Model1SingleSensor):
+    """ Class that implements Model1 (which models glucose CGM and
+        meal timestamp data), except the underlying 24-hour mean baseline 
+        trend is removed. NOTE that MCMC will not work correctly for this
+        class, as it is designed for simple testing with MAP optimisation
+        
+        :param DatasetModel1Concatenated: a DatasetModel1Concatenated class
+            that contains all data for the CGM sensors and meal timestamps
+    """
+    def __init__(
+            self,
+            DatasetModel1Concatenated,
+        ) -> None:
+        
+        self.__dict__ = DatasetModel1Concatenated.__dict__
+        
+        self.epsilon = 1e-6
+        self.w = tf.constant(2*np.pi/24)
+        self.prior = tfd.JointDistributionSequentialAutoBatched([
+             tfd.TransformedDistribution(distribution=tfd.HalfNormal(scale=[5.]),
+                                         bijector=tfb.Log(), name='A_0'),
+             tfd.TransformedDistribution(distribution=tfd.HalfNormal(scale=[1.]),
+                                         bijector=tfb.Log(), name='A_1'),
+             tfd.VonMises(loc=[0.0], concentration=[0.0], name='phi_1'),
+             tfp.distributions.Normal(loc = [0.0],scale = [0.5], name='A_11'),
+             tfp.distributions.Normal(loc = [0.0],scale = [0.5], name='A_12'),
+             tfp.distributions.Normal(loc = [0.0],scale = [0.5], name='A_21'),   
+             tfp.distributions.Normal(loc = [0.0],scale = [0.5], name='A_22'),      
+             tfd.TransformedDistribution(distribution=tfd.HalfNormal(scale=[0.5]),
+                                         bijector=tfb.Log(), name='tau'),
+             tfd.TransformedDistribution(distribution=tfd.HalfNormal(scale=[0.5]),
+                                         bijector=tfb.Log(), name='B_11'),
+             tfd.TransformedDistribution(distribution=tfd.HalfNormal(scale=[0.5]),
+                                         bijector=tfb.Log(), name='B_22'),
+             tfd.TransformedDistribution(distribution=tfd.HalfNormal(scale=5*tf.ones(self.N_meals1,dtype=tf.float32)),
+                                         bijector=tfb.Log(), name='meal_heights1'),
+             ]) 
+
+        super().__init__(DatasetModel1Concatenated)
+        
+    def transform_params(self,params):
+        A_0 = tf.math.exp(params[0,tf.newaxis])
+        A_1 = 0
+        phi_1 = params[2,tf.newaxis]
+        A_11 = tf.math.exp(params[3,tf.newaxis])
+        A_21 = tf.math.exp(params[5,tf.newaxis])
+        A_12 = tf.math.exp(params[4,tf.newaxis])
+        A_22 = tf.math.exp(params[6,tf.newaxis])
+        gamma = tf.math.exp(params[7,tf.newaxis])
+        B_11 = 0.
+        B_22 = tf.math.exp(params[8,tf.newaxis])
+        sigma = tf.math.exp(params[9,tf.newaxis]) 
+        heights_ind1 = tf.math.exp(params[self.N_global:,tf.newaxis])
+
+        return A_0, A_1, phi_1, A_11, A_12, A_21, A_22, gamma, B_11, B_22, sigma, heights_ind1

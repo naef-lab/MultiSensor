@@ -2,7 +2,7 @@
 
 This is the code to accompany our paper: 
 
-Uncovering personalised glucose responses and circadian rhythms from multiple wearable biosensors with Bayesian dynamical modelling (2023) Phillips NE, Collet TH\*, Naef F\*. 
+Uncovering personalized glucose responses and circadian rhythms from multiple wearable biosensors with Bayesian dynamical modeling (2023) Nicholas E. Phillips, Tinh-Hai Collet\*, Felix Naef\*. Cell Reports Methods, 3, 100545 ([link](https://doi.org/10.1016/j.crmeth.2023.100545))
 
 The goal of this computational method is to learn interpretable, personal parameters from wearable time series data to reveal circadian rhythms and physiological responses to external stressors such as meals and physical activity. The package MSS uses [TensorFlow Probability](https://www.tensorflow.org/probability).
 
@@ -18,9 +18,15 @@ We subdivide the problem of analysing the multiple signals by creating three suc
 
 ![modelsoverview.png](images/modelsoverview.png)
 
-## Tutorial
+These three different models are implemented as part of the MSS package.
 
-These three different models are implemented as part of the MSS package. Please see the tutorial Jupyter Notebook `tutorials/tutorial.ipynb` to see how to perform inference using these models.
+## Tutorials
+
+There are three different tutorials to help use the package:
+
+-[tutorials/tutorial.ipynb](tutorials/tutorial.ipynb): please see the main tutorial Jupyter Notebook  to see how to perform inference using the three models.
+-[tutorials/detrending raw glucose example.ipynb](tutorials/detrending raw glucose example.ipynb): this describes how to pre-process glucose CGM data via detrending.
+-[tutorials/Why add a 24-h rhythmic baseline to glucose?.ipynb](tutorials/Why add a 24-h rhythmic baseline to glucose?.ipynb): this provides an example to illustrate the motivation behind the underlying 24-hour baseline glucose rhythm in Model 1.
 
 ## Installation instructions
 
@@ -35,4 +41,4 @@ pip install .
 
 ## Citation
 
-Uncovering personalised glucose responses and circadian rhythms from multiple wearable biosensors with Bayesian dynamical modelling (2023) Phillips NE, Collet TH\*, Naef F\*. 
+Uncovering personalized glucose responses and circadian rhythms from multiple wearable biosensors with Bayesian dynamical modeling (2023) Nicholas E. Phillips, Tinh-Hai Collet\*, Felix Naef\*. Cell Reports Methods, 3, 100545 ([link](https://doi.org/10.1016/j.crmeth.2023.100545))
